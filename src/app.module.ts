@@ -6,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-      TaskManagerModule,
       TypeOrmModule.forRoot(),
+      TaskManagerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

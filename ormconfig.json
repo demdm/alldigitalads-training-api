@@ -5,6 +5,11 @@
   "username": "postgres",
   "password": "root",
   "database": "test",
-  "entities": [],
-  "synchronize": true
+  "synchronize": true,
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "migrationsTableName": "migrations",
+  "migrations": ["migrations/*.js"],
+  "cli": {
+    "migrationsDir": "migration"
+  }
 }
