@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
 
 @Injectable()
@@ -8,11 +8,13 @@ export class TaskManagerService {
   constructor(
       @InjectRepository(Task)
       private taskRepository: Repository<Task>,
-      private connection: Connection,
   ) {}
 
   findAll(): Promise<Task[]> {
-    return this.taskRepository.find();
+    return this.taskRepository
+        .createQueryBuilder()
+        .addOrderBy('id', 'ASC')
+        .getMany();
   }
 
   async remove(id: number): Promise<void> {
@@ -23,7 +25,7 @@ export class TaskManagerService {
     await this.taskRepository.save(task);
   }
 
-  async setIsCompleted(id: number, isCompleted: boolean): Promise<void> {
+  async changeCompletion(id: number, isCompleted: boolean): Promise<void> {
     let task = await this.taskRepository.findOneOrFail(id);
     task.isCompleted = isCompleted;
     await this.taskRepository.save(task);

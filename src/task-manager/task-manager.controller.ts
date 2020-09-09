@@ -1,11 +1,12 @@
 import {
+  Body,
   Controller,
   Delete,
-  Get, Patch,
+  Get,
+  Param,
+  Patch,
   Post,
-  Req,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { TaskManagerService } from './task-manager.service';
 import { Task } from "./entities/task.entity";
 
@@ -19,28 +20,24 @@ export class TaskManagerController {
   }
 
   @Post()
-  create(@Req() request: Request) {
+  create(@Body('title') title: string) {
     let task = new Task();
-    ({
-      title: task.title,
-      isCompleted: task.isCompleted,
-    } = request.body);
+    task.title = title;
+    task.isCompleted = false;
 
     return this.taskManagerService.save(task);
   }
 
-  @Delete()
-  delete(@Req() request: Request) {
-    return this.taskManagerService.remove(request.body.id);
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return this.taskManagerService.remove(id);
   }
 
-  @Patch('make-completed')
-  makeCompleted(@Req() request: Request) {
-    return this.taskManagerService.setIsCompleted(request.body.id, true);
-  }
-
-  @Patch('make-uncompleted')
-  makeUncompleted(@Req() request: Request) {
-    return this.taskManagerService.setIsCompleted(request.body.id, false);
+  @Patch(':id')
+  update(
+      @Param('id') id: number,
+      @Body('isCompleted') isCompleted: boolean,
+  ) {
+    return this.taskManagerService.changeCompletion(id, isCompleted);
   }
 }
