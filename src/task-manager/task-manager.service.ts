@@ -15,17 +15,17 @@ export class TaskManagerService {
     return this.taskRepository.find();
   }
 
-  findOne(id: number): Promise<Task> {
-    return this.taskRepository.findOne(id);
-  }
-
   async remove(id: number): Promise<void> {
     await this.taskRepository.delete(id);
   }
 
   async save(task: Task): Promise<void> {
-    await this.connection.transaction(async manager => {
-      await manager.save(task);
-    });
+    await this.taskRepository.save(task);
+  }
+
+  async setIsCompleted(id: number, isCompleted: boolean): Promise<void> {
+    let task = await this.taskRepository.findOneOrFail(id);
+    task.isCompleted = isCompleted;
+    await this.taskRepository.save(task);
   }
 }

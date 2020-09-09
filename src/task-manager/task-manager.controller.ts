@@ -18,14 +18,13 @@ export class TaskManagerController {
     return this.taskManagerService.findAll();
   }
 
-  @Post() // create or update
+  @Post()
   create(@Req() request: Request) {
     let task = new Task();
-    if (request.body.id) {
-      task.id = request.body.id;
-    }
-    task.title = request.body.title;
-    task.isCompleted = request.body.isCompleted;
+    ({
+      title: task.title,
+      isCompleted: task.isCompleted,
+    } = request.body);
 
     return this.taskManagerService.save(task);
   }
@@ -35,17 +34,13 @@ export class TaskManagerController {
     return this.taskManagerService.remove(request.body.id);
   }
 
-  // @Patch
-  // makeCompleted(id: number): Promise<void> {
-  //   let task = this.taskManagerService.findOne(id);
-  //   task.isCompleted = true;
-  //   return this.taskManagerService.save(task);
-  // }
-  //
-  // @Patch
-  // makeUncompleted(id: number): Promise<void> {
-  //   let task = this.taskManagerService.findOne(id);
-  //   task.isCompleted = false;
-  //   return this.taskManagerService.save(task);
-  // }
+  @Patch('make-completed')
+  makeCompleted(@Req() request: Request) {
+    return this.taskManagerService.setIsCompleted(request.body.id, true);
+  }
+
+  @Patch('make-uncompleted')
+  makeUncompleted(@Req() request: Request) {
+    return this.taskManagerService.setIsCompleted(request.body.id, false);
+  }
 }
