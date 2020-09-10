@@ -22,16 +22,17 @@ export class TaskManagerService {
   }
 
   async save(title: string): Promise<void> {
-    let task = new Task();
-    task.title = title;
-    task.isCompleted = false;
-
+    let task = new Task(title);
     await this.taskRepository.save(task);
   }
 
   async changeCompletion(id: number, isCompleted: boolean): Promise<void> {
     let task = await this.taskRepository.findOneOrFail(id);
-    task.isCompleted = isCompleted;
+
+    isCompleted
+        ? task.complete()
+        : task.unComplete();
+
     await this.taskRepository.save(task);
   }
 }

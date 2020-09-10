@@ -8,7 +8,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { TaskManagerService } from './task-manager.service';
-import { Task } from "./entities/task.entity";
 
 @Controller('tasks')
 export class TaskManagerController {
