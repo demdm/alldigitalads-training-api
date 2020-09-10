@@ -21,11 +21,7 @@ export class TaskManagerController {
 
   @Post()
   create(@Body('title') title: string) {
-    let task = new Task();
-    task.title = title;
-    task.isCompleted = false;
-
-    return this.taskManagerService.save(task);
+    return this.taskManagerService.save(title);
   }
 
   @Delete(':id')

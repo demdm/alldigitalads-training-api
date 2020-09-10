@@ -21,7 +21,11 @@ export class TaskManagerService {
     await this.taskRepository.delete(id);
   }
 
-  async save(task: Task): Promise<void> {
+  async save(title: string): Promise<void> {
+    let task = new Task();
+    task.title = title;
+    task.isCompleted = false;
+
     await this.taskRepository.save(task);
   }
 
